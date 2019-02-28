@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Index</title>
+	
+</head>
+<body>
+	<% include public/header.ejs %>
+	<hr>
+	
+	
+	 
+	<h1><%=title%></h1>
+	ejs page
+	<hr>
+	
+	<h2>循环</h2>
+	<ul>
+		<% for(var i=0;i<list.length;i++){ %>
+			<li><%=list[i]%></li>
+		<% } %>
+	</ul>
+	<hr>
+	
+	<h2><%-content%></h2>
+	<hr>
+	
+	<%if(num>24){%>
+	
+		>>>>>>>>
+	<%}else{%>
+		<<<<<<<<
+	<%}%>
+	<hr>
+	
+	<h2><%=userinfo%></h2> 
+	
+	
+
+
+</body>
+</html>

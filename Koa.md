@@ -163,13 +163,160 @@ app.use(async (ctx,next)=>{
 
 #### 第三方中间件
 
-## ejs模板
+##### ejs模板引擎
+
+```shell
+$ npm i koa-views --save 
+$ npm i ejs --save
+```
+
+```js
+// ejs模板引擎使用
+const Koa = require("koa"),
+	  router = require("koa-router")(),
+	  views = require("koa-views");//1、引入views
+
+var app = new Koa();
+
+//2、配置模板引擎中间件（第三方中间件）
+//app.use(views('views',{map: {html: 'ejs'}}))	//该方式配置时，模板后缀名为html
+app.use(views('views',{
+	extension: 'ejs'	//应用ejs模板引擎
+}));
+
+//ctx.state中的值在ejs模板中可以直接使用，该方式必须写在中间件中
+app.use(async (ctx,next)=>{
+	ctx.state.userinfo = 'userinfo-lov';
+	await next();//koa中必须使用await
+});
+
+app.use(async (ctx,next)=>{	
+	console.log(new Date());
+	await next();
+
+	if(ctx.status == 404){
+		ctx.body = "404 PAGE";
+	}else {
+		console.log(ctx.url);
+	}
+
+});
+
+
+router.get('/',async function(ctx){
+
+	let title = "Hello ejs";
+	let list = ['aaa','bbb','ccc'];
+	let content = "<h2>content</h2>";
+	let num = 20;
+	//传值
+	// 3、必须使用await，否则为异步执行，会导致找不到路由
+	await ctx.render('index',{
+		title: title,
+		list: list,
+		content: content,
+		num: num
+	});
+	// ctx.body = 'router body';
+}).get('/news',async (ctx)=>{
+	
+	ctx.body = "news body";
+
+}).get('/newscontent/:id',function(ctx){
+	console.log(ctx.params);	// { id: '111' }
+
+	ctx.body = 'newscontent body';
+});
+
+router.get('/log',function(ctx,next){
+	console.log('log  middleware');
+
+	next();
+});
+
+router.get('/log',function(ctx){
+	ctx.body = 'router body';
+});
+
+app.use(router.routes())	
+   .use(router.allowedMethods());	
+
+app.listen(8080);
+```
 
 ## POST提交数据
 
+### 原生
+
+```js
+1、
+exports.getPostData = function(ctx){
+	// 获取数据 异步
+	return new Promise((resolve,reject)=>{
+		try{
+			let str = '';
+			ctx.req.on('data',function(data){
+				str+= data;
+			})
+
+			ctx.req.on('end',function(data){
+				resolve(str);
+			})
+		}catch(err){
+			reject(err);
+		}
+	});
+}
+---------------------------------------------
+	2、common = require('./module/common.js');
+..........
+	3、
+	var data = await common.getPostData(ctx);	//原生
+	console.log(data);
+	ctx.body = data;
+//username=lov&password=123
+```
+
+### koa-bodyparser
+
+```js
+1、bodyparser = require("koa-bodyparser")
+
+2、//使用bodyparser中间件
+app.use(bodyparser());
+
+3、router.post('/doadd',async (ctx)=>{
+	ctx.body = ctx.request.body;
+})
+//{"username":"lov","password":"123"}
+```
+
 ## Static静态资源
 
-## koa_art_template
+```js
+1、static = require("koa-static");
+
+2、//静态web服务中间件
+//可配置多个
+//先去static目录中找，如果能找到就返回对应的文件，否则执行next()
+app.use(static('./static'));
+
+app.use(static('./public'));
+```
+
+```html
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+
+	<img src="images/main.png">
+```
+
+## art_template模板引擎
+
+​	art-template是一个简约、超快的模板引擎。
+
+​	采用作用域预声明的技术来优化模板渲染速度，从而获取接近javascript极限的运行性能，并且同时支持NodeJS和浏览器
+
+​	art-template支持ejs的语法，也可以用类似angular数据绑定的语法
 
 ## Cookie
 
