@@ -314,13 +314,106 @@ app.use(static('./public'));
 
 ​	art-template是一个简约、超快的模板引擎。
 
-​	采用作用域预声明的技术来优化模板渲染速度，从而获取接近javascript极限的运行性能，并且同时支持NodeJS和浏览器
+​	采用作用域预声明的技术来优化模板渲染速度，从而获取接近javascript极限的运行性能，并且同时支持NodeJS和浏览器。
 
-​	art-template支持ejs的语法，也可以用类似angular数据绑定的语法
+​	art-template支持ejs的语法，也可以用类似angular数据绑定的语法。
+
+​	https://aui.github.io/art-template/docs/
+
+```shell
+$ npm i art-template --save
+$ npm i koa-art-template --save
+```
+
+```js
+const Koa = require("koa"),
+	  router = require("koa-router")(),
+     //1、引入koa-art-template与path
+	  render = require("koa-art-template"),
+	  path = require('path');//引入path
+
+var app = new Koa();
+
+//2、配置koa-art-template模板引擎
+render(app,{
+	root: path.join(__dirname,'views'),	//视图的位置
+	extname: '.html',	//后缀名
+	debug: process.env.NODE_ENV !== 'production' //是否开启调试模式
+})
+
+router.get('',async (ctx)=>{
+	// ctx.body ="Home Page";
+	let list = {
+		name: 'lov',
+		h3: '<h3>content</h3>',
+		num: 20,
+		arr: ['aaa','bbb','ccc','ddd']
+	}
+    //3、
+	await ctx.render('index',{
+		list: list
+	});
+});
+
+router.get('/news',async (ctx)=>{
+	ctx.body = "News Page";
+});
+
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+app.listen(8080);
+```
 
 ## Cookie
 
+**Koa中设置Cookie的值**
+
+`ctx.cookies.set(name,value,[options])`
+
+通过设置options设置cookie name 的value：
+
+![](img/cookie.png)
+
+**Koa中获取Cookie的值**
+
+`ctx.cookies.get(name)`
+
+```js
+ctx.cookies.set('userinfo','lov',{
+		maxAge: 60*1000*60
+	});
+//-------------------------------------------
+let userinfo = ctx.cookies.get('userinfo');
+	console.log(userinfo);
+```
+
+**对于中文**
+
+```js
+//设置中文转换
+	let name = Buffer.from('张三').toString('base64');
+	ctx.cookies.set('name',name,{
+		maxAge: 60*1000*60
+	});
+//--------------------------------------------]
+//获取中文转换
+	let data = ctx.cookies.get('name');
+	let name = Buffer.from(data,'base64').toString();
+	console.log(name);
+```
+
 ## Seesion
+
+```shell
+$ nppm i koa-seesion --save
+```
+
+```js
+
+```
+
+
 
 ## mongodb
 

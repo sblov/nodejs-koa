@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Home Page</title>
+</head>
+<body>
+	<h1>Art-template Page</h1>
+	Name: <%=list.name%> | {{list.name}}<br>
+	h3: <%-list.h3%> | {{@list.h3}}<br>
+	if:
+	<%if(24>list.num){%>
+		less than 24
+	<%}else{%>
+		more than 24
+	<%}%>
+	<hr>
+	{{if 24>list.num}}
+		<span>less than 24</span>
+	{{else}}
+		<span>more than 24</span>
+	{{/if}}
+	<br>
+	for:
+	<%for(let i=0;i<list.arr.length;i++){%>
+		<li><%=list.arr[i]%></li>
+	<%}%>
+	<hr>
+	{{each list.arr}}
+		<li>{{$index}} : {{$value}}</li>
+	{{/each}}
+
+	{{include 'public/footer.html'}}
+
+</body>
+</html>
