@@ -10,7 +10,7 @@ var app = new Koa();
 app.keys = ['some secret hurr'];	//cookie的签名 
  	
 const CONFIG = {
-  key: 'koa:sess', /** (string) cookie key (default is koa:sess) */
+  key: 'koa: sess', /** (string) cookie key (default is koa:sess) */
   maxAge: 86400000,
   autoCommit: true, /** (boolean) automatically commit headers (default true) */
   overwrite: true, /** (boolean) can overwrite or not (default true) */
@@ -22,14 +22,24 @@ const CONFIG = {
  
 app.use(session(CONFIG, app)); 
 
-router.get('',async (ctx)=>{
+router.get('/login',async (ctx)=>{
+
+	ctx.session.userinfo = 'lov';
+	ctx.body ="login session";
+
+	
+});
+
+router.get('/',async (ctx)=>{
+
+	console.log(ctx.session.userinfo);
 	ctx.body ="Home Page";
 
 	
 });
 
 router.get('/news',async (ctx)=>{
-	
+	console.log(ctx.session.userinfo)
 	ctx.body = "News Page";
 });
 
