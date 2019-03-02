@@ -461,11 +461,81 @@ app.use(router.allowedMethods());
 app.listen(8080);
 ```
 
-
-
 ## mongodb
+
+​	https://www.bilibili.com/video/av25805592/?p=21  	// TODO
+
+## Koa应用生成器
+
+```shell
+$ npm i koa-generator -g	#全局安装koa-generator
+$ koa koa_demo	#创建koa项目
+$ npm install	#安装依赖module
+$ npm start		#启动
+```
+
+www文件进行应用配置
+
+![](img/koa-generator.png)
+
+![](img/koa-generator1.png)
 
 ## 路由模块化
 
-## 路由视图模块化
+```js
+const Koa = require("koa"),
+	  router = require("koa-router")(),
+	  user = require('./routers/user.js'),
+	  admin = require('./routers/admin.js');
+
+var app = new Koa();
+
+//配置模块路由，在访问该路径时，继续匹配后面的提供的路由
+router.use('/user',user.routes());	//开启路由，放访问路径 为'/'时，可省略
+router.use('/admin',admin);	//在导出时开启
+
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+app.listen(8080);
+
+```
+
+admin.js
+
+```js
+const  router = require("koa-router")();
+
+router.get('/',(ctx)=>{
+	ctx.body = 'Admin Home Page';
+});
+router.get('/list',(ctx)=>{
+	ctx.body = 'Admin List Page';
+});
+router.get('/info',(ctx)=>{
+	ctx.body = 'Admin Info Page';
+});
+
+module.exports = router.routes();	//在导出时开启
+```
+
+user.js
+
+```js
+const  router = require("koa-router")();
+
+router.get('/',(ctx)=>{
+	ctx.body = 'User Home Page';
+});
+router.get('/list',(ctx)=>{
+	ctx.body = 'User List Page';
+});
+router.get('/info',(ctx)=>{
+	ctx.body = 'User Info Page';
+});
+
+module.exports = router;
+```
+
+==**视图模块化与路由模块化类似，将相对应的视图放在同一目录，分层访问**==
 
