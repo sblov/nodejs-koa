@@ -31,6 +31,18 @@
 	{{/each}}
 
 	{{include 'public/footer.html'}}
+	
+	<hr>
+	
+	<table>
+		{{each list.stus}}
+		<tr>
+			<td>{{$value.name}}</td>
+			<td>{{$value.age}}</td>
+			<td>{{$value.gender}}</td>
+		</tr>
+		{{/each}}		
+	</table>
 
 </body>
 </html>

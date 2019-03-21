@@ -461,9 +461,41 @@ app.use(router.allowedMethods());
 app.listen(8080);
 ```
 
-## mongodb
+## MongoDB
 
-​	https://www.bilibili.com/video/av25805592/?p=21  	// TODO
+```javascript
+//基本使用
+/*const MongoClient = require('mongodb').MongoClient;
+
+const url = 'mongodb://localhost:27017';
+
+const dbName = 'test';
+console.time('start');
+MongoClient.connect(url,(err,client)=>{
+	console.log("Connected Successfully");
+
+	const db = client.db(dbName);
+
+	db.collection('students').findOne({},(err,docs)=>{
+		if (!err) {
+
+			console.log(docs);
+			client.close();
+			console.timeEnd('start');
+		}
+	});
+});*/
+
+
+//封装
+const DB = require('./module/dbconfig.js');
+
+DB.find("students",{}).then((data)=>{
+	console.log(data);
+})
+```
+
+
 
 ## Koa应用生成器
 
